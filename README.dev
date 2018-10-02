@@ -105,7 +105,9 @@ your workspace.  Some will have compiler errors.
 
 In the Eclipse Package Explorer view (or Projects view) navigate
 to org.yocto.sdk.releng/ directory and open (double click)
-this file:  eclipse-yocto.target
+this file depend on your OS:  
+eclipse-yocto.target (for linux user)
+eclipse-yocto-win.target (for windows user)
 
 Once this file is opened with the 'Target Definition' edito, you should
 see in the message bar: "Resolving Yocto with R...inition" with a percentage.
@@ -150,3 +152,4 @@ https://bugzilla.yoctoproject.org/buglist.cgi?query_format=specific&order=releva
 It should install the Tycho maven plugins and restart Eclipse.
 
 You are now setup to build, run, debug eclipse-yocto plugins
+
