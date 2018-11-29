@@ -74,6 +74,8 @@
 		<module>features/org.yocto.sdk2</module>
 		<module>features/org.yocto.sdk2.autotools</module>
 		<module>features/org.yocto.sdk2.cmake</module>
+
+		<module>tests/org.yocto.sdk2.ui.tests</module>
 <!--
 		<module>releng/org.yocto.sdk.target.ui.tests</module>
 -->

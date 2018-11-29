@@ -1,0 +1,62 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Element-Name: Install eclipse-yocto plugins from build
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: https://wiki.yoctoproject.org/wiki/Eclipse_Yocto_Test_Cases#Eclipse-Yocto_-_Launch_Eclipse_Yocto_plugin
+Id: _LdahoPOuEeiO0NONUDDlGA
+Runtime-Version: 2.4.0.201811290011
+Save-Time: 11/29/18 12:15 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+3. Install Eclipse Yocto plugins
+a) Download the eclipse yocto plugin archive file
+b) In Eclipse workbench window, go to "Help" menu -> "Install New Software..."
+c) In "Install" dialog, click "Add..." button
+d) In "Add Repository" dialog, enter "Eclipse Yocto" for (repository) Name, click "Archive..."
+e) In "Repository archive" browse dialog, select the downloaded Eclipse-Yocto repository archive
+f) Back in Add Repository dialog, click "Add"
+g) Back in "Install" dialog, make sure "Work with:" is set to "Eclipse Yocto" repository, check all available plugin, click "Next" > and verify plugins/features name/version, click "Next" > and accept license agreement, click "Finish"
+h) If "Security Warning" dialog appears, click "OK" to install unsigned content.
+i) In "Software Updates" dialog, click "Yes" to restart Eclipse to complete Eclipse Yocto plugins 
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+proc "get-env" [val name] {
+    invoke-static "org.eclipse.rcptt.util" "java.lang.System" getenv $name
+}
+
+let [ val archive [concat [get-env "ECLIPSE_YOCTO_PREFIX"] "/eclipse-yocto/releng/org.yocto.sdk.repo/target/eclipse-yocto-1.4.1-SNAPSHOT.zip"]]{
+	get-menu -path "Help/Install New Software..." | click
+	get-window Install | get-button "Add..." | click
+	set-dialog-result File $archive
+	with [get-window Install] {
+    	with [get-window "Add Repository"] {
+        	get-button "Archive..." | click
+        	get-editbox -after [get-label "Name:"] | set-text local
+        	get-button Add | click
+    	}
+    	with [get-tree] {
+        	get-item -path "Yocto Project Main Features" | check
+        	select "Yocto Project Main Features" | get-item -path "Yocto Project Optional Features" | check
+        	select "Yocto Project Optional Features"
+    	}
+    	with [get-button "Next >"] {
+        	click
+        	click
+    	}
+    	get-button "I accept the terms of the license agreements" | click
+    	get-button Finish | click
+	}
+}
+get-window "Security Warning" | get-button "Install anyway" | click
+get-window "Install Native Software Packages" | get-button OK | click
+get-window "Software Updates" | get-button "Restart Now" | click
+wait-until-eclipse-is-ready
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

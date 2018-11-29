@@ -1,0 +1,25 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Element-Name: Verify that "Yocto Project SDK Plug-in" is installed
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _4z5W4POvEeiO0NONUDDlGA
+Runtime-Version: 2.4.0.201811290011
+Save-Time: 11/29/18 12:24 AM
+Testcase-Type: ecl
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+get-about-menu | click
+with [get-window "About Eclipse IDE"] {
+    get-button "Installation Details" | click
+    with [get-window "Eclipse IDE Installation Details"] {
+        get-tree | select "Yocto Project SDK Plug-in"
+        get-button Close | click
+    }
+	get-button Close | click
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
