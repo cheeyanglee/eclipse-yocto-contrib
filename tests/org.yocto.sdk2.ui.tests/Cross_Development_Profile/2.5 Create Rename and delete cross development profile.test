@@ -1,0 +1,87 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _bf06cPbREeiJxbpD9OGqrA
+Element-Name: 2.5 Create Rename and delete cross development profile
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _24-N8PayEeiJxbpD9OGqrA
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 12/28/18 9:23 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Create , Rename and delete cross development profile
+a) In "Preferences" Window -> click "New".
+b) In "Create new profile" Window -> insert an identical temporary profile name -> click "Ok".
+c) In "Preferences" Window -> Select "SDK installation" -> click "Edit" -> locate to SDK path -> click "OK"  -> click "Apply" -> click "Apply and Close".
+d) In "Preferences" Window ->   Click "Rename" .
+e) In Rename Profile Window insert an identical new profile name -> OK  -> click "Apply" -> click "Apply and Close".
+f) In "Preferences" Window ->   select the same profile  -> Click "Remove" .
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+if [$sdk_path | not-eq "" | $build_tree_path | not-eq ""] {
+  //create_new_profile
+  get-preferences-menu | click
+  with [get-window Preferences] {
+      get-tree | select "Yocto Project \\(alpha\\)"
+      get-group "Cross development profile" | get-button "New..." | click
+      with [get-window "Create new profile"] {
+          get-editbox -after [get-label "Enter new profile name"] | set-text $temporary_profile_name1
+          get-button OK | click
+      }
+      if [$sdk_path | eq ""] {
+        get-group Toolchain | get-button "Build directory:" | click
+      }
+  }
+
+  if [$sdk_path | not-eq ""] {
+    set-dialog-result Folder $sdk_path
+    with [get-window Preferences] {
+        get-group Toolchain | get-button "Edit..." | click
+    }
+  }-else{
+    set-dialog-result Folder $build_tree_path
+    with [get-window Preferences] {
+        get-group Toolchain | get-button "Edit..." | click
+    }
+  }
+
+  with [get-window Preferences] {
+      get-button Apply | click
+      get-button "Apply and Close" | click
+  }
+
+  //rename_profile
+  get-preferences-menu | click
+  with [get-window Preferences] {
+      get-group "Cross development profile" | get-button "Rename..." | click
+      with [get-window "Rename profile"] {
+          get-editbox -after [get-label "Enter new name"] | set-text $temporary_profile_name2
+          get-button OK | click
+      }
+      get-button Apply | click
+      get-button "Apply and Close" | click
+  }
+
+  //remove_profile
+  get-preferences-menu | click
+  with [get-window Preferences] {
+      get-tree | select "Yocto Project \\(alpha\\)"
+      with [get-group "Cross development profile"] {
+          get-combo -after [get-label "Profile:"] | select $temporary_profile_name2
+          get-button Remove | click
+          get-combo -after [get-label "Profile:"] | verify-error {select $temporary_profile_name2}
+      }
+  }
+}-else{
+  echo "Test case \"Create Rename and delete cross development profile\" skipped. Parameter sdk_path and build_tree_path not set."
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

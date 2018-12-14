@@ -1,19 +1,19 @@
 --- RCPTT testcase ---
 Format-Version: 1.0
-Element-Name: Install eclipse-yocto plugins from build
+Element-Name: 1.1 Install eclipse-yocto plugins from build
 Element-Type: testcase
 Element-Version: 3.0
 External-Reference: https://wiki.yoctoproject.org/wiki/Eclipse_Yocto_Test_Cases#Eclipse-Yocto_-_Launch_Eclipse_Yocto_plugin
 Id: _LdahoPOuEeiO0NONUDDlGA
-Runtime-Version: 2.4.0.201811290011
-Save-Time: 11/29/18 12:15 AM
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 12/14/18 10:20 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
 Content-Type: text/plain
 Entry-Name: .description
 
-3. Install Eclipse Yocto plugins
+Install Eclipse Yocto plugins
 a) Download the eclipse yocto plugin archive file
 b) In Eclipse workbench window, go to "Help" menu -> "Install New Software..."
 c) In "Install" dialog, click "Add..." button
@@ -22,7 +22,8 @@ e) In "Repository archive" browse dialog, select the downloaded Eclipse-Yocto re
 f) Back in Add Repository dialog, click "Add"
 g) Back in "Install" dialog, make sure "Work with:" is set to "Eclipse Yocto" repository, check all available plugin, click "Next" > and verify plugins/features name/version, click "Next" > and accept license agreement, click "Finish"
 h) If "Security Warning" dialog appears, click "OK" to install unsigned content.
-i) In "Software Updates" dialog, click "Yes" to restart Eclipse to complete Eclipse Yocto plugins 
+i) If "Install Native Software Packages" dialog appears, click "OK" 
+j) In "Software Updates" dialog, click "Yes" to restart Eclipse to complete Eclipse Yocto plugins 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
 Content-Type: text/ecl
@@ -56,7 +57,10 @@ let [ val archive [concat [get-env "ECLIPSE_YOCTO_PREFIX"] "/eclipse-yocto/relen
 	}
 }
 get-window "Security Warning" | get-button "Install anyway" | click
-get-window "Install Native Software Packages" | get-button OK | click
+try{
+	get-window "Install Native Software Packages" | get-button OK | click
+} -catch{
+}
 get-window "Software Updates" | get-button "Restart Now" | click
 wait-until-eclipse-is-ready
 ------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

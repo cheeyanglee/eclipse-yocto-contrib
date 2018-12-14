@@ -1,0 +1,80 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _bf06cPbREeiJxbpD9OGqrA
+Element-Name: 4.3 Build CMake Docker SDK Toolchain Project
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _67W3MP22Eei13dkD24qxlw
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 12/27/18 3:07 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Build CMake Docker SDK Toolchain Project 
+execute the test only when test_docker_build parameter are set. Set test_docker_build to blank to skip this test case.
+a) in project explorer, create new c/c++ project with Cmake hello world template and Yocto Project SDK CMake Toolchain (alpha) toolchain
+b) right click on the project, go to configure and select  "Configure/Configure as Yocto Project CMake project (alpha)" 
+c) in prompted project properties select SDK toolchain profile -> click "apply and close"
+d) in project explorer, right click select properties
+e) in properties windows, expand C/C++ build -> select Setting  
+g) select container setting tab, check "build inside Docker Image" -> select an Image -> click "Apply" .
+h) select "Yocto Project (alpha)" at left panel -> select Docker SDK toolchain profile -> click "Apply " -> click "Apply and Close".
+i) refresh project explorer tab  
+j) pin "CDT Global Build Consolse"
+k) right click on project -> select "Regenerate CMake build files" -> validate docker image and toolchain in console .
+l) right click on project -> select "Build Project"-> validate docker image and toolchain in console.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+if [$sdk_path | not-eq "" | $docker_image | not-eq ""] {
+	get-menu -path "File/New/C\\/C++ Project" | click
+	get-window "New C/C++ Project" | get-table | select [get-item -path "" -index 1] | click -default
+	with [get-window -class WizardDialog] {
+	    get-tree | select "CMake \\(alpha\\)/Hello World C CMake Project"
+	    get-table | select "Yocto Project SDK CMake Toolchain (alpha)"
+	    get-editbox -after [get-label "Project name:"] | set-text $cmake_docker_build_tree_toolchain_project_name
+	    get-button Finish | click
+	}
+	get-view "Project Explorer" | get-tree | select $cmake_docker_build_tree_toolchain_project_name | get-menu 
+	    -path "Configure/Configure as Yocto Project CMake project (alpha)" | click
+	with [get-window [concat "Properties for " $cmake_docker_build_tree_toolchain_project_name " (Filtered)"]] {
+	    get-group "Cross development profile" | get-combo -after [get-label "Profile:"] | select $build_tree_toolchain_profile_name
+	    get-button "Apply and Close" | click
+	}
+	get-view "Project Explorer" | get-tree | get-menu -path Refresh | click
+	get-view "Project Explorer" | get-tree | select [concat $cmake_docker_build_tree_toolchain_project_name " [" $build_tree_toolchain_profile_name "]"] | get-menu 
+	    -path Properties | click
+	with [get-window [concat "Properties for " $cmake_docker_build_tree_toolchain_project_name ]] {
+	    get-tree | select "C\\/C\\+\\+ Build/Settings"
+	    get-button "Build inside Docker Image" | check
+	    get-combo -after [get-label "Image:"] | select $docker_image
+	    get-button Apply | click
+	    get-tree | select "Yocto Project \\(alpha\\)"
+	    get-group "Cross development profile" | get-combo -after [get-label "Profile:"] | select $docker_build_tree_toolchain_profile_name
+	    get-button Apply | click
+	    get-button "Apply and Close" | click
+	}
+	get-view Console | get-button "Display Selected Console" | click -arrow
+	get-menu -path "1 CDT Global Build Console" | click
+	with [get-view Console] {
+	    get-button "Pin Console" | click
+	    get-editbox -after [get-label "CDT Global Build Console"] | get-menu -path Clear | click
+	}
+	get-view "Project Explorer" | get-tree | select [concat $cmake_docker_build_tree_toolchain_project_name " [" $docker_build_tree_toolchain_profile_name "]"]
+	set-dialog-result MessageBox 64
+	get-view "Project Explorer" | get-tree | get-menu -path "Regenerate CMake build files" | click
+	get-view Console | get-text-viewer | get-property text | contains $docker_image | verify-true
+	get-view Console | get-text-viewer | get-property text | contains $gcc_validation | verify-true
+	get-view "Project Explorer" | get-tree | select [concat $cmake_docker_build_tree_toolchain_project_name " [" $docker_build_tree_toolchain_profile_name "]"] | get-menu -path "Build Project" | click
+	get-view Console | get-text-viewer | get-property text | contains $docker_image | verify-true
+	get-view Console | get-text-viewer | get-property text | contains $gcc_validation | verify-true
+}-else{
+	echo "Test case \"Build CMake Docker SDK Toolchain Project\" skipped. Parameter sdk_path or docker_image are set to blank."
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -1,0 +1,55 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _bf06cPbREeiJxbpD9OGqrA
+Element-Name: 2.2 Create SDK Toolchain Docker Profile
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _KCJwMPaxEeiJxbpD9OGqrA
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 12/28/18 9:22 AM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+ Create Yocto SDK toolchain Docker Profile
+a) In "Preferences" Window -> click "New".
+b) In "Create new profile" Window -> insert an identical profile name -> click "Ok".
+c) In "Preferences" Window -> check "Build and launch using container" -> Select SDK installation -> click "Edit"
+d) In prompt window, select Mount a host directory -> click "Browse..." -> locate to SDK path  -> copy the Directory -> paste to "Container path" -> click "Ok" -> click "Apply" -> click "Apply and Close".
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+if [$sdk_path | not-eq ""] {
+	get-preferences-menu | click
+	with [get-window Preferences] {
+	    get-tree | select "Yocto Project \\(alpha\\)"
+	    get-group "Cross development profile" | get-button "New..." | click
+	    with [get-window "Create new profile"] {
+	        get-editbox -after [get-label "Enter new profile name"] | set-text $docker_sdk_toolchain_profile_name
+	        get-button OK | click
+	    }
+	    get-button "Build and launch using container" | check
+	    get-group Toolchain | get-button "Edit..." | click
+	    with [get-window -class ContainerDirectoryDialog] {
+	        get-group "Mount type:" | get-button "Mount a host directory" | click
+	        get-editbox -after [get-label "Container path:"] | set-text $sdk_path 
+	    }
+	}
+	set-dialog-result Folder $sdk_path 
+	with [get-window Preferences] {
+	    with [get-window -class ContainerDirectoryDialog] {
+	        get-group "Mount type:" | get-button "Browse..." | click
+	        get-button OK | click
+	    }
+	    get-button Apply | click
+	    get-button "Apply and Close" | click
+	}
+}-else{
+	echo "Test case \"Create SDK Toolchain Docker Profile\" skipped. Parameter sdk_path not set."
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

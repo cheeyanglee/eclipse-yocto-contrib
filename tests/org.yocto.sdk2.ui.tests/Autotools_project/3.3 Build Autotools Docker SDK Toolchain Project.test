@@ -1,0 +1,82 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _bf06cPbREeiJxbpD9OGqrA
+Element-Name: 3.3 Build Autotools Docker SDK Toolchain Project
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference: 
+Id: _ETZfwPeEEeiRqtCTO-zJuw
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 12/27/18 3:15 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Build Autotools Docker SDK Toolchain Project 
+execute the test only when test_docker_build parameter are set. Set test_docker_build to blank to skip this test case.
+a) in project explorer, create new c/c++ project using GNU Autotools  Hello World ANSI C Autotools Project template
+b) right click on the project, go to configure and select  "Configure/Configure as Yocto Project Autotools project (alpha)" 
+c) in prompted project properties select Build tree toolchain profile -> click "apply and close"
+d) refresh project explorer tab  
+e) select the project -> right click ->  click properties. 
+f) expand C/C++ build -> select Setting  
+g) select container setting tab, check "build inside Docker Image" -> select an Image -> check "Run all Autotools in Container" - > click "Apply" .
+h) select "Yocto Project (alpha)" at left panel -> select Docker SDK toolchain profile -> click "Apply " -> click "Apply and Close".
+i ) pin "CDT Global Build Consolse"
+j)  refresh project explorer -> right click on project -> select "Reconfigure Project" -> validate docker image and toolchain in console .
+k) right click on project -> select "Build Project"-> validate  docker image and toolchain in console.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+if [$sdk_path | not-eq "" | $docker_image | not-eq ""] {
+	get-menu -path "File/New/C\\/C++ Project" | click
+	get-window "New C/C++ Project" | get-table | select [get-item -path "" -index 1] | click -default
+	with [get-window -class WizardDialog] {
+	    get-tree | select "GNU Autotools/Hello World ANSI C Autotools Project"
+	    get-editbox -after [get-label "Project name:"] | set-text $autotools_docker_sdk_toolchain_project_name
+	    get-button Finish | click
+	}
+	get-view "Project Explorer" | get-tree | select $autotools_docker_sdk_toolchain_project_name | get-menu 
+	    -path "Configure/Configure as Yocto Project Autotools project (alpha)" | click
+	with [get-window [concat "Properties for " $autotools_docker_sdk_toolchain_project_name " (Filtered)"]] {
+	    get-group "Cross development profile" | get-combo -after [get-label "Profile:"] | select $sdk_toolchain_profile_name
+	    get-button "Apply and Close" | click
+	}
+	get-view "Project Explorer" | get-tree | get-menu -path Refresh | click
+	get-view "Project Explorer" | get-tree | select [concat $autotools_docker_sdk_toolchain_project_name " ["$sdk_toolchain_profile_name "]"] | get-menu -path Properties 
+	    | click
+	with [get-window [concat "Properties for " $autotools_docker_sdk_toolchain_project_name ]] {
+	    get-tree | select "C\\/C\\+\\+ Build/Settings"
+	    get-button "Build inside Docker Image" | check
+	    get-combo -after [get-label "Image:"] | select $docker_image
+	    get-button "Run all Autotools in Container" | check
+	    get-button Apply | click
+	    get-tree | select "Yocto Project \\(alpha\\)"
+	    get-group "Cross development profile" | get-combo -after [get-label "Profile:"] | select $docker_sdk_toolchain_profile_name
+	    get-button Apply | click
+	    get-button "Apply and Close" | click
+	}
+	get-view Console | get-button "Display Selected Console" | click -arrow
+	get-menu -path "1 CDT Global Build Console" | click
+	with [get-view Console] {
+	    get-button "Pin Console" | click
+	    get-editbox -after [get-label "CDT Global Build Console"] | get-menu -path Clear | click
+	}
+	get-view "Project Explorer" | get-tree | get-menu -path Refresh | click
+	get-view "Project Explorer" | get-tree | select [concat $autotools_docker_sdk_toolchain_project_name " ["$docker_sdk_toolchain_profile_name "]"] | get-menu 
+	    -path "Reconfigure Project" | click
+	get-view Console | get-text-viewer | get-property text | contains $docker_image | verify-true
+	get-view Console | get-text-viewer | get-property text | contains $gcc_validation | verify-true
+	get-view "Project Explorer" | get-tree | select [concat $autotools_docker_sdk_toolchain_project_name " ["$docker_sdk_toolchain_profile_name "]"] | get-menu 
+	    -path "Build Project" | click
+	get-view Console | get-text-viewer | get-property text | contains $docker_image | verify-true
+	get-view Console | get-text-viewer | get-property text | contains $gcc_validation | verify-true
+}-else{
+	echo "Test case \"Build Autotools Docker SDK Toolchain Project\" skipped. Parameter docker_image or sdk_path set to blank."
+}
+
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--
