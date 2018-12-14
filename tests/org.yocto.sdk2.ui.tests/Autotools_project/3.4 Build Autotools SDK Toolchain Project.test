@@ -1,0 +1,73 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Contexts: _bf06cPbREeiJxbpD9OGqrA
+Element-Name: 3.4 Build Autotools SDK Toolchain Project
+Element-Type: testcase
+Element-Version: 3.0
+External-Reference:
+Id: _we7gsPbIEeiJxbpD9OGqrA
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 1/2/19 9:17 PM
+Testcase-Type: ecl
+
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
+Content-Type: text/plain
+Entry-Name: .description
+
+Build Autotools SDK Toolchain Project
+a) in project explorer, create new c/c++ project using GNU Autotools  Hello World ANSI C Autotools Project template
+b) right click on the project, go to configure and select  "Configure/Configure as Yocto Project Autotools project (alpha)"
+c) in prompted project properties select SDK toolchain profile -> click "apply and close"
+d) refresh project explorer tab
+e) pin "CDT Global Build Consolse"
+f) right click on project -> select "Reconfigure Project" -> validate toolchain in console .
+g) right click on project -> select "Build Project"-> validate toolchain in console.
+------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa--
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac
+Content-Type: text/ecl
+Entry-Name: .content
+
+if [$sdk_path | not-eq ""] {
+	get-menu -path "File/New/C\\/C++ Project" | click
+	get-window "New C/C++ Project" | get-table | select [get-item -path "" -index 1] | click -default
+	with [get-window -class WizardDialog] {
+	    get-tree | select "GNU Autotools/Hello World ANSI C Autotools Project"
+	    get-editbox -after [get-label "Project name:"] | set-text $autotools_sdk_toolchain_project_name
+	    get-button Finish | click
+	}
+	with [get-view "Project Explorer" | get-tree] {
+	    select $autotools_sdk_toolchain_project_name | get-menu -path "Configure/Configure as Yocto Project Autotools project (alpha)"
+	        | click
+	}
+	with [get-window [concat "Properties for " $autotools_sdk_toolchain_project_name " (Filtered)"]] {
+	    get-group "Cross development profile" | get-combo -after [get-label "Profile:"] | select $sdk_toolchain_profile_name
+	    get-button "Apply and Close" | click
+	}
+	get-view "Project Explorer" | get-tree | get-menu -path Refresh | click
+	try{
+  	get-view Console | get-button "Display Selected Console" | click -arrow
+  	get-menu -path "1 CDT Global Build Console" | click
+  	with [get-view Console] {
+  	    get-button "Pin Console" | click
+  	    get-editbox -after [get-label "CDT Global Build Console"] | get-menu -path Clear | click
+  	}
+	}-catch{}
+	get-view "Project Explorer" | get-tree | select [concat $autotools_sdk_toolchain_project_name " [" $sdk_toolchain_profile_name "]" ] | get-menu
+	    -path "Reconfigure Project" | click
+	get-view Console | get-text-viewer | get-property text | contains $gcc_validation | verify-true
+
+	try{
+  	get-view Console | get-button "Display Selected Console" | click -arrow
+  	get-menu -path "1 CDT Global Build Console" | click
+  	with [get-view Console] {
+  	    get-button "Pin Console" | click
+  	    get-editbox -after [get-label "CDT Global Build Console"] | get-menu -path Clear | click
+  	}
+	}-catch{}
+	get-view "Project Explorer" | get-tree | select [concat $autotools_sdk_toolchain_project_name " [" $sdk_toolchain_profile_name "]" ] | get-menu
+	    -path "Build Project" | click
+	get-view Console | get-text-viewer | get-property text | contains $gcc_validation | verify-true
+}-else{
+	echo "Test case \"Build Autotools SDK Toolchain Project\" skipped. Parameter SDK_Path not set."
+}
+------=_.content-0a7243a0-75d3-3d5f-9791-539de0e5b7ac--

@@ -1,0 +1,39 @@
+--- RCPTT testcase ---
+Format-Version: 1.0
+Context-Type: org.eclipse.rcptt.ctx.parameters
+Element-Name: Parameter
+Element-Type: context
+Element-Version: 2.0
+Id: _bf06cPbREeiJxbpD9OGqrA
+Runtime-Version: 2.3.0.201806262310
+Save-Time: 12/4/18 11:06 AM
+
+------=_.parameters.context-2e023de5-3294-36a9-ac1d-6701f05a40ee
+Content-Type: text/properties
+Entry-Name: .parameters.context
+
+sdk_path=
+build_tree_path=
+docker_image=
+
+sdk_toolchain_profile_name=SDK Toolchain
+build_tree_toolchain_profile_name=Build Tree Toolchain
+docker_sdk_toolchain_profile_name=Docker SDK Toolchain
+docker_build_tree_toolchain_profile_name=Docker Build Tree Toolchain
+
+temporary_profile_name2=name2
+temporary_profile_name1=name1
+
+autotools_sdk_toolchain_project_name=Autotools_SDK_Toolchain
+autotools_build_tree_toolchain_project_name=Autotools_Build_Tree_Toolchain
+autotools_docker_sdk_toolchain_project_name=Autotools_Docker_SDK_Toolchain
+autotools_docker_build_tree_toolchain_project_name=Autotools_Docker_Build_Tree_Toolchain
+
+cmake_sdk_toolchain_project_name=CMake_SDK_Toolchain
+cmake_build_tree_toolchain_project_name=CMake_Build_Tree_Toolchain
+cmake_docker_sdk_toolchain_project_name=CMake_Docker_SDK_Toolchain
+cmake_docker_build_tree_toolchain_project_name=CMake_Docker_Build_Tree_Toolchain
+
+gcc_validation=-linux-gcc
+
+------=_.parameters.context-2e023de5-3294-36a9-ac1d-6701f05a40ee--
