@@ -6,7 +6,7 @@ Element-Version: 3.0
 External-Reference: https://wiki.yoctoproject.org/wiki/Eclipse_Yocto_Test_Cases#Eclipse-Yocto_-_Launch_Eclipse_Yocto_plugin
 Id: _LdahoPOuEeiO0NONUDDlGA
 Runtime-Version: 2.3.0.201806262310
-Save-Time: 12/14/18 10:20 PM
+Save-Time: 1/2/19 3:24 PM
 Testcase-Type: ecl
 
 ------=_.description-216f885c-d591-38ce-8ea2-e4f8cb4d6ffa
@@ -33,7 +33,7 @@ proc "get-env" [val name] {
     invoke-static "org.eclipse.rcptt.util" "java.lang.System" getenv $name
 }
 
-let [ val archive [concat [get-env "ECLIPSE_YOCTO_PREFIX"] "/eclipse-yocto/releng/org.yocto.sdk.repo/target/eclipse-yocto-1.4.1-SNAPSHOT.zip"]]{
+let [ val archive [concat [get-env "ECLIPSE_YOCTO_PREFIX"] "/releng/org.yocto.sdk.repo/target/eclipse-yocto-1.4.1-SNAPSHOT.zip"]]{
 	get-menu -path "Help/Install New Software..." | click
 	get-window Install | get-button "Add..." | click
 	set-dialog-result File $archive

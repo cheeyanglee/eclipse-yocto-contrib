@@ -12,7 +12,7 @@ Save-Time: 12/4/18 11:06 AM
 Content-Type: text/properties
 Entry-Name: .parameters.context
 
-sdk_path=
+sdk_path=/tmp/opt/poky/2.6
 build_tree_path=
 docker_image=
 
