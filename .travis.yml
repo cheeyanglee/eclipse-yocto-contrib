@@ -28,3 +28,13 @@ before_script:
   - Xvfb :99.0 -extension RANDR > /dev/null &
   - fluxbox &
   - sleep 10
+  - export ECLIPSE_YOCTO_PREFIX=$(pwd)
+  - mkdir -p "/tmp/eclipse-cpp"
+  - wget http://ftp.yz.yamagata-u.ac.jp/pub/eclipse/technology/epp/downloads/release/photon/R/eclipse-cpp-photon-R-linux-gtk-x86_64.tar.gz
+  - tar xvzf eclipse-cpp-photon-R-linux-gtk-x86_64.tar.gz -C /tmp/eclipse-cpp
+  - wget http://downloads.yoctoproject.org/releases/yocto/yocto-2.6/toolchain/x86_64/poky-glibc-x86_64-core-image-sato-core2-64-toolchain-2.6.sh
+  - chmod 755 poky-glibc-x86_64-core-image-sato-core2-64-toolchain-2.6.sh
+  - echo "/tmp/opt/poky/2.6" | ./poky-glibc-x86_64-core-image-sato-core2-64-toolchain-2.6.sh
+  - sed -i 's/sdk_path=/sdk_path=\/tmp\/opt\/poky\/2.6/g' $(pwd)/tests/org.yocto.sdk2.ui.tests/Parameter.ctx
+
+script: mvn clean install
