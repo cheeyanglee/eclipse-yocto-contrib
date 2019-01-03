@@ -35,6 +35,6 @@ before_script:
   - wget http://downloads.yoctoproject.org/releases/yocto/yocto-2.6/toolchain/x86_64/poky-glibc-x86_64-core-image-sato-core2-64-toolchain-2.6.sh
   - chmod 755 poky-glibc-x86_64-core-image-sato-core2-64-toolchain-2.6.sh
   - echo "/tmp/opt/poky/2.6" | ./poky-glibc-x86_64-core-image-sato-core2-64-toolchain-2.6.sh
-  - sed -i 's/sdk_path=/sdk_path=\/tmp\/opt\/poky\/2.6/g' $(pwd)/tests/org.yocto.sdk2.ui.tests/Parameter.ctx
+  - sed -i 's/sdk_path=/sdk_path=\/ttmp\/opt\/poky\/2.6/g' $(pwd)/tests/org.yocto.sdk2.ui.tests/Parameter.ctx
 
 script: mvn clean install
